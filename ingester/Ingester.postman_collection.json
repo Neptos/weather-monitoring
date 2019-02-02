@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "0f1758c2-7e2d-4660-94aa-73a996c703ac",
+		"name": "Ingester",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "api/Temperature",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/Temperature",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"Temperature"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/Temperature",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "294e24f8-b1ed-476e-ba48-7f45cb231eaf",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"",
+							"pm.test(\"had id and value\", function () {",
+							"    pm.expect(jsonData.value).to.eql(20.5);",
+							"    pm.expect(jsonData.id).to.be.not.null;",
+							"});",
+							"",
+							"pm.globals.set(\"id\", jsonData.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Value\":20.50,\n\t\"Timestamp\": \"2019-01-28T21:39:00Z\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/Temperature",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"Temperature"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/Temperature/{id}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "32ca38e7-4a73-41cb-8b8f-3411d4834837",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"check value has updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.globals.get(\"id\"));",
+							"    pm.expect(jsonData.value).to.eql(23.5);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"Value\":23.50,\n\t\"Timestamp\": \"2019-01-28T21:39:00Z\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/api/Temperature/{{id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"Temperature",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/Temperature/{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/Temperature/{{id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"Temperature",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/Temperature/{id}",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/api/Temperature/{{id}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"Temperature",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f2158f74-22e0-41f3-853c-a1f84dd51fb8",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "abc09b60-7c4e-41f5-b83d-ea776a9441ec",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "33e5a055-02a9-40ef-b8f2-33c86d7ec68f",
+			"key": "host",
+			"value": "localhost:5000",
+			"type": "string"
+		}
+	]
+}
