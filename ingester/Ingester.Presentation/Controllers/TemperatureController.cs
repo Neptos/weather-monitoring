@@ -38,6 +38,10 @@ namespace Ingester.Presentation.Controllers
         public async Task<ActionResult<TemperatureDto>> Get(string id)
         {
             var temperature = await mediator.Send(new GetTemperatureQuery(id));
+            if (temperature == null)
+            {
+                return NotFound(null);
+            }
             return base.Ok(temperature);
         }
 
@@ -45,7 +49,8 @@ namespace Ingester.Presentation.Controllers
         public async Task<ActionResult<TemperatureDto>> Post([FromBody] TemperatureRequest temperatureRequest)
         {
             var id = await mediator.Send(new PostTemperatureCommand(temperatureRequest));
-            return await Get(id);
+            var temperature = await mediator.Send(new GetTemperatureQuery(id));
+            return CreatedAtAction(nameof(Get), new { id }, temperature);
         }
 
         [HttpPut("{id}")]
@@ -56,7 +61,7 @@ namespace Ingester.Presentation.Controllers
             {
                 return await Get(id);
             }
-            return BadRequest("Entity not found");
+            return NotFound("Entity not found");
         }
 
         [HttpDelete("{id}")]
@@ -67,7 +72,7 @@ namespace Ingester.Presentation.Controllers
             {
                 return Ok();
             }
-            return BadRequest("Entity not found");
+            return NotFound("Entity not found");
         }
     }
 }
