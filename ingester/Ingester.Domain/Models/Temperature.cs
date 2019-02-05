@@ -7,5 +7,7 @@ namespace Ingester.Domain.Models
         public string Id { get; set; }
         public float Value { get; set; }
         public DateTime Timestamp { get; set; }
+        public string SensorId { get; set; }
+        public Sensor Sensor { get; set; }
     }
 }

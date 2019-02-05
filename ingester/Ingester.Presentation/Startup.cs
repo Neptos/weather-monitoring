@@ -31,7 +31,7 @@ namespace Ingester.Presentation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<TemperatureDbContext>(options =>
+                .AddDbContext<WeatherDbContext>(options =>
                 {
                     options.UseNpgsql(configuration.GetSection("ConnectionString").Value);
                 })

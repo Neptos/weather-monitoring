@@ -1,13 +1,13 @@
 using Ingester.Application.DataContracts.Requests;
 using MediatR;
 
-namespace Ingester.Application.Commands
+namespace Ingester.Application.Handlers.Requests
 {
-    public class PostTemperatureCommand : IRequest<string>
+    public class PostTemperatureRequest : IRequest
     {
         public TemperatureRequest TemperatureRequest { get; }
 
-        public PostTemperatureCommand(TemperatureRequest temperatureRequest)
+        public PostTemperatureRequest(TemperatureRequest temperatureRequest)
         {
             TemperatureRequest = temperatureRequest;
         }
