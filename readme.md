@@ -31,3 +31,12 @@ If you are running your database as a docker container on the same host just lin
 If it's running on the same host as the ingester you can just link the two containers:
 
 `docker run -d --link ingester:ingester -e SENSOR_ENDPOINT=http://<Url to temperature info>/ -e INGESTER_ENDPOINT=http://ingester:5000/ --name <container name> custom-url-gatherer`
+
+## Fmi gatherer
+
+### Building the docker image
+`docker build -t fmi-gatherer .`
+
+###
+
+`docker run -d --link ingester:ingester -e INGESTER_ENDPOINT=http://ingester:5000/ --name <container name> fmi-gatherer`
