@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
+using Ingester.Infrastructure.Configurations;
+using Ingester.IoC;
 using Ingester.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -30,20 +32,26 @@ namespace Ingester.Presentation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<RabbitConfiguration>(configuration.GetSection("Rabbit"));
+
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<WeatherDbContext>(options =>
                 {
-                    options.UseNpgsql(configuration.GetSection("ConnectionString").Value);
+                    options.UseNpgsql(configuration.GetConnectionString("PostgresDb"));
                 })
                 .BuildServiceProvider();
+
             services.AddAutoMapper(Assembly.GetEntryAssembly().GetReferencedAssemblies().Select(Assembly.Load));
             services.AddMediatR();
             services.AddOpenApiDocument();
+
+            services.AddCustomServices();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionsMonitor<RabbitConfiguration> rabbitConfigurationOptions)
         {
             if (env.IsDevelopment())
             {
