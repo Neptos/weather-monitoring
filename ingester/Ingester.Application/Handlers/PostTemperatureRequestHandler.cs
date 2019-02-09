@@ -7,6 +7,8 @@ using Ingester.Application.Handlers.Requests;
 using Ingester.Domain.Models;
 using Ingester.Persistence;
 using MediatR;
+using Ingester.Application.Handlers.Notifications;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ingester.Application.Handlers
 {
@@ -14,11 +16,13 @@ namespace Ingester.Application.Handlers
     {
         private readonly WeatherDbContext context;
         private readonly IMapper mapper;
+        private readonly IMediator mediator;
 
-        public PostTemperatureRequestHandler(WeatherDbContext context, IMapper mapper)
+        public PostTemperatureRequestHandler(WeatherDbContext context, IMapper mapper, IMediator mediator)
         {
             this.context = context;
             this.mapper = mapper;
+            this.mediator = mediator;
         }
 
         public async Task<Unit> Handle(PostTemperatureRequest request, CancellationToken cancellationToken)
@@ -52,6 +56,13 @@ namespace Ingester.Application.Handlers
             await context.Temperatures.AddAsync(temperature);
 
             await context.SaveChangesAsync();
+
+            var fetchedTemperature = context.Temperatures
+                .Include(t => t.Sensor)
+                    .ThenInclude(s => s.Location)
+                .FirstOrDefault(t => t.Id == temperature.Id);
+
+            await mediator.Publish(new TemperatureSavedNotification(fetchedTemperature));
             return Unit.Value;
         }
     }
