@@ -5,6 +5,6 @@ namespace Ingester.Application.DataContracts.Responses
 {
     public class TemperatureResponse
     {
-        public ICollection<TemperatureDto> Temperatures { get; set; }
+        public ICollection<FlatTemperatureDto> Temperatures { get; set; }
     }
 }
