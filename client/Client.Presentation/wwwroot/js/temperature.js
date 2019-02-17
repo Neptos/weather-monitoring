@@ -13,7 +13,7 @@ connection.on("ReceiveTemperature", function (temperatureDto) {
         temperatureDiv.id = temperatureDto.sensorId;
         temperatureDiv.style = "padding: 20px;"
 
-        var locationName = document.createElement("h1");
+        var locationName = document.createElement("h2");
         locationName.textContent = temperatureDto.locationName;
         temperatureDiv.appendChild(locationName);
 
@@ -24,16 +24,16 @@ connection.on("ReceiveTemperature", function (temperatureDto) {
         timestamp.textContent = datetime.toLocaleString("en-GB");
         temperatureDiv.appendChild(timestamp);
 
-        var temperature = document.createElement("h3");
+        var temperature = document.createElement("h1");
         temperature.id = temperatureDto.sensorId + "temperature";
-        temperature.textContent = temperatureDto.value;
         temperatureDiv.appendChild(temperature);
 
         temperatureHolder.appendChild(temperatureDiv);
     }
 
     var temperature = document.getElementById(temperatureDto.sensorId + "temperature");
-    temperature.textContent = temperatureDto.value;
+    var temperatureFloat = parseFloat(temperatureDto.value).toFixed(2);
+    temperature.textContent = temperatureFloat.toString() + "°C";
 });
 
 connection.start().then(function(){
