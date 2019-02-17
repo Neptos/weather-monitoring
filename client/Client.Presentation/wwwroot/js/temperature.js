@@ -5,12 +5,12 @@ var connection = new signalR.HubConnectionBuilder()
     .build();
 
 connection.on("ReceiveTemperature", function (temperatureDto) {
-    var temperatureDiv = document.getElementById(temperatureDto.locationId);
+    var temperatureDiv = document.getElementById(temperatureDto.sensorId);
     if(temperatureDiv === null || temperatureDiv === undefined) {
         var temperatureHolder = document.getElementById("container");
 
         temperatureDiv = document.createElement("div");
-        temperatureDiv.id = temperatureDto.locationId;
+        temperatureDiv.id = temperatureDto.sensorId;
         temperatureDiv.style = "padding: 20px;"
 
         var locationName = document.createElement("h1");
@@ -25,14 +25,14 @@ connection.on("ReceiveTemperature", function (temperatureDto) {
         temperatureDiv.appendChild(timestamp);
 
         var temperature = document.createElement("h3");
-        temperature.id = temperatureDto.locationId + "temperature";
+        temperature.id = temperatureDto.sensorId + "temperature";
         temperature.textContent = temperatureDto.value;
         temperatureDiv.appendChild(temperature);
 
         temperatureHolder.appendChild(temperatureDiv);
     }
 
-    var temperature = document.getElementById(temperatureDto.locationId + "temperature");
+    var temperature = document.getElementById(temperatureDto.sensorId + "temperature");
     temperature.textContent = temperatureDto.value;
 });
 
