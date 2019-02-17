@@ -1,42 +1,46 @@
 # Weather monitor
 
-## Ingester
+This repository contains small subprojects that together gathers, stores and displays temperature data(and in the future hopefully more) using what ever technology I find interesting at the time.
 
-### Building the docker image
-Create `appsettings.json` in Ingester.Presentation and edit it to something like this:
+## Running
+
+Parts of this system uses RabbitMQ as a message broker. You can for example set one up using the public docker images available here https://hub.docker.com/_/rabbitmq.
+
+The Ingester and the Distributor require some info in their `appsettings.json` files, see below.
+
+Each subproject has a `Makefile`. Update it to suit your requirements and you should be good to go.
+
+## Overview
+
+### Ingester
+
+This is where gatherers post their data. It in turn publishes the data on the message broker.
+
+Include this in your `appsettings.json` in Ingester.Presentation:
 ```
-{
-  "Logging": {
-    "LogLevel": {
-      "Default": "Warning"
-    }
-  },
-  "AllowedHosts": "*",
-  "ConnectionString": "Host=db;Port=5432;Database=<database>;Username=<username>;Password=<password>"
-}
+  "ConnectionString": "Host=<host>;Port=5432;Database=<database>;Username=<username>;Password=<password>",
+  "Rabbit":
+  {
+    "HostName": "<rabbitmq hostname>"
+  }
 ```
 
-`docker build -t ingester .`
+### Distributor
 
-### Running the docker image
-If you are running your database as a docker container on the same host just link the two containers
-`docker run -d --link postgres:db -p 5000:5000 --name ingester ingester`
+Reads data from the Ingester using the RabbitMQ message broker and distributes it to clients using SignalR.
 
-## Custom url gatherer
+Include this in your `appsettings.json` in Distributor.Presentation:
+```
+  "Rabbit":
+  {
+    "HostName": "<rabbitmq hostname>"
+  }
+```
 
-### Building the docker image
-`docker build -t custom-url-gatherer .`
+### Client
 
-### Running the docker image
-If it's running on the same host as the ingester you can just link the two containers:
+Serves a basic Razor pages based frontend that connects to the distributor using SignalR.
 
-`docker run -d --link ingester:ingester -e SENSOR_ENDPOINT=http://<Url to temperature info>/ -e INGESTER_ENDPOINT=http://ingester:5000/ --name <container name> custom-url-gatherer`
+### Gatherers
 
-## Fmi gatherer
-
-### Building the docker image
-`docker build -t fmi-gatherer .`
-
-###
-
-`docker run -d --link ingester:ingester -e INGESTER_ENDPOINT=http://ingester:5000/ --name <container name> fmi-gatherer`
+They all basically function the same. Gather and aggregate data and then sends it to the Ingester.
