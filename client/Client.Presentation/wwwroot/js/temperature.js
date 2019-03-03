@@ -1,7 +1,7 @@
 "use strict";
 
 var connection = new signalR.HubConnectionBuilder()
-    .withUrl("http://localhost:5001/temperatureHub")
+    .withUrl("http://temperatureapi.mattiasberg.fi/temperatureHub")
     .build();
 
 connection.on("ReceiveTemperature", function (temperatureDto) {
@@ -18,6 +18,7 @@ connection.on("ReceiveTemperature", function (temperatureDto) {
         temperatureDiv.appendChild(locationName);
 
         var timestamp = document.createElement("span");
+        timestamp.id = temperatureDto.sensorId + "timestamp";
         var datetime = new Date(temperatureDto.timestamp);
         var tzoffset = (new Date()).getTimezoneOffset();
         datetime.setMinutes(datetime.getMinutes() - tzoffset);
@@ -26,14 +27,21 @@ connection.on("ReceiveTemperature", function (temperatureDto) {
 
         var temperature = document.createElement("h1");
         temperature.id = temperatureDto.sensorId + "temperature";
+        var temperatureFloat = parseFloat(temperatureDto.value).toFixed(2);
+        temperature.textContent = temperatureFloat.toString() + "°C";
         temperatureDiv.appendChild(temperature);
 
         temperatureHolder.appendChild(temperatureDiv);
+        return;
     }
 
     var temperature = document.getElementById(temperatureDto.sensorId + "temperature");
     var temperatureFloat = parseFloat(temperatureDto.value).toFixed(2);
     temperature.textContent = temperatureFloat.toString() + "°C";
+
+    var timestamp = document.getElementById(temperatureDto.sensorId + "timestamp");
+    var datetime = new Date(temperatureDto.timestamp);
+    timestamp.textContent = datetime.toLocaleString("en-GB");
 });
 
 connection.start().then(function(){
