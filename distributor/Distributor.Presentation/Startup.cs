@@ -48,7 +48,7 @@ namespace Distributor.Presentation
 
             app.UseCors(builder => {
                 builder
-                    .WithOrigins("http://localhost:8080")
+                    .WithOrigins("http://localhost:8080", "http://temperature.mattiasberg.fi/")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
