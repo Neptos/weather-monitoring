@@ -5,7 +5,7 @@ namespace Ingester.Domain.Models
     public class DataPoint
     {
         public string Id { get; set; }
-        public float Value { get; set; }
+        public string Value { get; set; }
         public DateTime Timestamp { get; set; }
         public string SensorId { get; set; }
         public Sensor Sensor { get; set; }

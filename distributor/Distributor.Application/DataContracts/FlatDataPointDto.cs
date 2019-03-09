@@ -5,7 +5,7 @@ namespace Distributor.Application.DataContracts.Dtos
     public class FlatDataPointDto
     {
         public string Id { get; set; }
-        public float Value { get; set; }
+        public string Value { get; set; }
         public DateTime Timestamp { get; set; }
         public string SensorId { get; set; }
         public string LocationId { get; set; }
