@@ -55,9 +55,9 @@ namespace Ingester.Infrastructure.Consumers
                             using (var serviceScope = serviceProvider.CreateScope())
                             {
                                 var mediator = serviceScope.ServiceProvider.GetRequiredService<IMediator>();
-                                var request = new GetCurrentTemperatureRequest();
-                                var temperatures = await mediator.Send(request);
-                                response = JsonConvert.SerializeObject(temperatures.Temperatures);
+                                var request = new GetCurrentDataPointsRequest();
+                                var dataPoints = await mediator.Send(request);
+                                response = JsonConvert.SerializeObject(dataPoints.DataPoints);
                             }
                         }
                         catch (Exception e)

@@ -3,8 +3,8 @@ using Ingester.Application.DataContracts.Dtos;
 
 namespace Ingester.Application.DataContracts.Responses
 {
-    public class TemperatureResponse
+    public class DataPointResponse
     {
-        public ICollection<FlatTemperatureDto> Temperatures { get; set; }
+        public ICollection<FlatDataPointDto> DataPoints { get; set; }
     }
 }

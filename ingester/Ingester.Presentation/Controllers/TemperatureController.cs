@@ -18,9 +18,10 @@ namespace Ingester.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] TemperatureRequest temperatureRequest)
+        public async Task<ActionResult> Post([FromBody] DataPointRequest request)
         {
-            await mediator.Send(new PostTemperatureRequest(temperatureRequest));
+            request.Type = "Temperature";
+            await mediator.Send(new PostDataPointRequest(request));
             return Ok();
         }
     }

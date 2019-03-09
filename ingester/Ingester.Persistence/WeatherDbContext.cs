@@ -7,7 +7,7 @@ namespace Ingester.Persistence
 {
     public class WeatherDbContext : DbContext
     {
-        public DbSet<Temperature> Temperatures { get; set; }
+        public DbSet<DataPoint> DataPoints { get; set; }
         public DbSet<Sensor> Sensors { get; set; }
         public DbSet<Location> Locations { get; set; }
 
@@ -17,10 +17,10 @@ namespace Ingester.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Temperature>()
-                .HasOne(temperature => temperature.Sensor)
-                .WithMany(sensor => sensor.Temperatures)
-                .HasForeignKey(temperature => temperature.SensorId)
+            modelBuilder.Entity<DataPoint>()
+                .HasOne(dataPoint => dataPoint.Sensor)
+                .WithMany(sensor => sensor.DataPoints)
+                .HasForeignKey(dataPoint => dataPoint.SensorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Sensor>()

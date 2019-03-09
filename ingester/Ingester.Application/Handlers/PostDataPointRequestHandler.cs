@@ -12,57 +12,57 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ingester.Application.Handlers
 {
-    public class PostTemperatureRequestHandler : IRequestHandler<PostTemperatureRequest>
+    public class PostDataPointRequestHandler : IRequestHandler<PostDataPointRequest>
     {
         private readonly WeatherDbContext context;
         private readonly IMapper mapper;
         private readonly IMediator mediator;
 
-        public PostTemperatureRequestHandler(WeatherDbContext context, IMapper mapper, IMediator mediator)
+        public PostDataPointRequestHandler(WeatherDbContext context, IMapper mapper, IMediator mediator)
         {
             this.context = context;
             this.mapper = mapper;
             this.mediator = mediator;
         }
 
-        public async Task<Unit> Handle(PostTemperatureRequest request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(PostDataPointRequest request, CancellationToken cancellationToken)
         {
-            var location = context.Locations.FirstOrDefault(l => l.Name == request.TemperatureRequest.Location);
+            var location = context.Locations.FirstOrDefault(l => l.Name == request.DataPointRequest.Location);
 
             if (location == null)
             {
                 location = new Location
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Name = request.TemperatureRequest.Location
+                    Name = request.DataPointRequest.Location
                 };
                 await context.Locations.AddAsync(location);
             }
 
-            var sensor = await context.Sensors.FindAsync(request.TemperatureRequest.SensorId);
+            var sensor = await context.Sensors.FindAsync(request.DataPointRequest.SensorId);
             if (sensor == null)
             {
                 sensor = new Sensor
                 {
-                    Id = request.TemperatureRequest.SensorId,
+                    Id = request.DataPointRequest.SensorId,
                     LocationId = location.Id
                 };
                 await context.Sensors.AddAsync(sensor);
             }
 
-            var temperature = mapper.Map<Temperature>(request.TemperatureRequest);
-            temperature.Id = Guid.NewGuid().ToString();
-            temperature.SensorId = sensor.Id;
-            await context.Temperatures.AddAsync(temperature);
+            var dataPoint = mapper.Map<DataPoint>(request.DataPointRequest);
+            dataPoint.Id = Guid.NewGuid().ToString();
+            dataPoint.SensorId = sensor.Id;
+            await context.DataPoints.AddAsync(dataPoint);
 
             await context.SaveChangesAsync();
 
-            var fetchedTemperature = context.Temperatures
+            var fetchedDataPoint = context.DataPoints
                 .Include(t => t.Sensor)
                     .ThenInclude(s => s.Location)
-                .FirstOrDefault(t => t.Id == temperature.Id);
+                .FirstOrDefault(t => t.Id == dataPoint.Id);
 
-            await mediator.Publish(new TemperatureSavedNotification(fetchedTemperature));
+            await mediator.Publish(new DataPointSavedNotification(fetchedDataPoint));
             return Unit.Value;
         }
     }

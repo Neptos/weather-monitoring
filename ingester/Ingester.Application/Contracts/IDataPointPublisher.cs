@@ -3,8 +3,8 @@ using Ingester.Application.DataContracts.Dtos;
 
 namespace Ingester.Application.Contracts
 {
-    public interface ITemperaturePublisher
+    public interface IDataPointPublisher
     {
-        Task Publish(FlatTemperatureDto flatTemperatureDto);
+        Task Publish(FlatDataPointDto flatDataPointDto);
     }
 }

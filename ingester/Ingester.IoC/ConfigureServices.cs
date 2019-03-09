@@ -11,7 +11,7 @@ namespace Ingester.IoC
         public static void AddCustomServices(this IServiceCollection services)
         {
             services.AddSingleton<IHostedService, RabbitConsumer>();
-            services.AddTransient<ITemperaturePublisher, TemperaturePublisher>();
+            services.AddTransient<IDataPointPublisher, DataPointPublisher>();
         }
     }
 }

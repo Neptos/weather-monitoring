@@ -9,24 +9,24 @@ using RabbitMQ.Client;
 
 namespace Ingester.Infrastructure.Messages.Senders
 {
-    public class TemperaturePublisher : ITemperaturePublisher
+    public class DataPointPublisher : IDataPointPublisher
     {
         private readonly RabbitConfiguration rabbitConfiguration;
 
-        public TemperaturePublisher(IOptionsMonitor<RabbitConfiguration> rabbitConfigurationOptions)
+        public DataPointPublisher(IOptionsMonitor<RabbitConfiguration> rabbitConfigurationOptions)
         {
             this.rabbitConfiguration = rabbitConfigurationOptions.CurrentValue;
         }
 
-        public Task Publish(FlatTemperatureDto flatTemperatureDto)
+        public Task Publish(FlatDataPointDto flatDataPointDto)
         {
             var factory = new ConnectionFactory() { HostName = rabbitConfiguration.HostName };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                var exchange = "temperatures";
-                var routingKey = $"{flatTemperatureDto.LocationName}.{flatTemperatureDto.SensorId}";
-                var message = JsonConvert.SerializeObject(flatTemperatureDto);
+                var exchange = "weather";
+                var routingKey = $"{flatDataPointDto.LocationName}.{flatDataPointDto.SensorId}";
+                var message = JsonConvert.SerializeObject(flatDataPointDto);
                 var body = Encoding.UTF8.GetBytes(message);
 
                 channel.ExchangeDeclare(exchange: exchange,

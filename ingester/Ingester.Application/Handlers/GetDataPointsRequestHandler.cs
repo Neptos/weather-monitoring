@@ -12,31 +12,31 @@ using Ingester.Application.DataContracts.Dtos;
 
 namespace Ingester.Application.Handlers
 {
-    public class GetTemperaturesRequestHandler : IRequestHandler<GetTemperaturesRequest, TemperatureResponse>
+    public class GetDataPointsRequestHandler : IRequestHandler<GetDataPointsRequest, DataPointResponse>
     {
         private readonly WeatherDbContext context;
         private readonly IMapper mapper;
 
-        public GetTemperaturesRequestHandler(WeatherDbContext context, IMapper mapper)
+        public GetDataPointsRequestHandler(WeatherDbContext context, IMapper mapper)
         {
             this.context = context;
             this.mapper = mapper;
         }
 
-        public async Task<TemperatureResponse> Handle(GetTemperaturesRequest request, CancellationToken cancellationToken)
+        public async Task<DataPointResponse> Handle(GetDataPointsRequest request, CancellationToken cancellationToken)
         {
             return await Task.Run(() =>
              {
-                 var temperatures = context.Temperatures
+                 var dataPoints = context.DataPoints
                      .Include(t => t.Sensor)
                          .ThenInclude(s => s.Location)
-                     .Where(t => t.Timestamp >= request.TemperaturesRequestFilter.From
-                         && t.Timestamp <= request.TemperaturesRequestFilter.To
-                         && t.Sensor.Location.Name == request.TemperaturesRequestFilter.Location).ToList();
+                     .Where(t => t.Timestamp >= request.DataPointsRequestFilter.From
+                         && t.Timestamp <= request.DataPointsRequestFilter.To
+                         && t.Sensor.Location.Name == request.DataPointsRequestFilter.Location).ToList();
 
-                 var response = new TemperatureResponse
+                 var response = new DataPointResponse
                  {
-                     Temperatures = mapper.Map<ICollection<FlatTemperatureDto>>(temperatures)
+                     DataPoints = mapper.Map<ICollection<FlatDataPointDto>>(dataPoints)
                  };
                  return response;
              });

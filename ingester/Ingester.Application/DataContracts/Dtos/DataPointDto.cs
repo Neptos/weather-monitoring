@@ -2,7 +2,7 @@ using System;
 
 namespace Ingester.Application.DataContracts.Dtos
 {
-    public class TemperatureDto
+    public class DataPointDto
     {
         public string Id { get; set; }
         public float Value { get; set; }

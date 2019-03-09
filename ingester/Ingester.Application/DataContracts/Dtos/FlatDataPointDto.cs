@@ -1,6 +1,6 @@
 namespace Ingester.Application.DataContracts.Dtos
 {
-    public class FlatTemperatureDto : TemperatureDto
+    public class FlatDataPointDto : DataPointDto
     {
         public string SensorId { get; set; }
         public string LocationId { get; set; }

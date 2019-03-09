@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Ingester.Application.Handlers.Requests
 {
-    public class GetCurrentTemperatureRequest : IRequest<TemperatureResponse>
+    public class GetCurrentDataPointsRequest : IRequest<DataPointResponse>
     {
     }
 }
