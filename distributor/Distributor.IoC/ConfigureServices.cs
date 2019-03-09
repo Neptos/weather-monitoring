@@ -13,7 +13,7 @@ namespace Distributor.IoC
         public static void AddCustomServices(this IServiceCollection services)
         {
             services.AddSingleton<IHostedService, RabbitConsumer>();
-            services.AddTransient<ITemperatureService, TemperatureService>();
+            services.AddTransient<IDataPointService, DataPointService>();
             services.AddTransient<IRpcClient, RpcClient>();
         }
     }

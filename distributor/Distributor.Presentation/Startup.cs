@@ -48,7 +48,7 @@ namespace Distributor.Presentation
 
             app.UseCors(builder => {
                 builder
-                    .WithOrigins("http://localhost:8080", "http://temperature.mattiasberg.fi/")
+                    .WithOrigins("http://localhost:8080", "http://weather.mattiasberg.fi/")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
@@ -56,7 +56,7 @@ namespace Distributor.Presentation
 
             app.UseSignalR(routes =>
             {
-                routes.MapHub<TemperatureHub>("/temperatureHub");
+                routes.MapHub<DataPointHub>("/dataPointHub");
             });
 
             app.UseMvc();

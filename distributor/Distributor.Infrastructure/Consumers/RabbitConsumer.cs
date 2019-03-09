@@ -16,7 +16,7 @@ namespace Distributor.Infrastructure.Consumers
 {
     public class RabbitConsumer : IHostedService
     {
-        private const string Exchange = "temperatures";
+        private const string Exchange = "weather";
         private readonly RabbitConfiguration rabbitConfiguration;
         private readonly IServiceProvider serviceProvider;
         private Task worker;
@@ -49,11 +49,11 @@ namespace Distributor.Infrastructure.Consumers
                     {
                         var body = ea.Body;
                         var message = Encoding.UTF8.GetString(body);
-                        var dto = JsonConvert.DeserializeObject<FlatTemperatureDto>(message);
+                        var dto = JsonConvert.DeserializeObject<FlatDataPointDto>(message);
                         using (var serviceScope = serviceProvider.CreateScope())
                         {
-                            var temperatureService = serviceScope.ServiceProvider.GetRequiredService<ITemperatureService>();
-                            await temperatureService.NewTemperatureReceivedAsync(dto);
+                            var dataPointService = serviceScope.ServiceProvider.GetRequiredService<IDataPointService>();
+                            await dataPointService.NewDataPointReceivedAsync(dto);
                         }
                     };
                     channel.BasicConsume(queue: queueName,

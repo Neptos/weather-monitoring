@@ -7,5 +7,6 @@ namespace Ingester.Application.DataContracts.Dtos
         public string Id { get; set; }
         public float Value { get; set; }
         public DateTime Timestamp { get; set; }
+        public string Type { get; set; }
     }
 }

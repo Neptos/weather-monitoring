@@ -6,6 +6,6 @@ namespace Distributor.Application.Contracts
 {
     public interface IRpcClient
     {
-        ICollection<FlatTemperatureDto> FetchCurrentTemperatures();
+        ICollection<FlatDataPointDto> FetchCurrentDataPoints();
     }
 }

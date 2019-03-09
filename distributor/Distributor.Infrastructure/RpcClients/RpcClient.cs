@@ -19,7 +19,7 @@ namespace Distributor.Infrastructure.RpcClients
         private readonly IModel channel;
         private readonly string replyQueueName;
         private readonly EventingBasicConsumer consumer;
-        private readonly BlockingCollection<ICollection<FlatTemperatureDto>> respQueue = new BlockingCollection<ICollection<FlatTemperatureDto>>();
+        private readonly BlockingCollection<ICollection<FlatDataPointDto>> respQueue = new BlockingCollection<ICollection<FlatDataPointDto>>();
         private readonly IBasicProperties props;
 
         public RpcClient(IOptionsMonitor<RabbitConfiguration> rabbitConfigurationOptions)
@@ -42,15 +42,15 @@ namespace Distributor.Infrastructure.RpcClients
                 {
                     var body = ea.Body;
                     var response = Encoding.UTF8.GetString(body);
-                    var dtos = JsonConvert.DeserializeObject<ICollection<FlatTemperatureDto>>(response);
+                    var dtos = JsonConvert.DeserializeObject<ICollection<FlatDataPointDto>>(response);
                     respQueue.Add(dtos);
                 }
             };
         }
 
-        public ICollection<FlatTemperatureDto> FetchCurrentTemperatures()
+        public ICollection<FlatDataPointDto> FetchCurrentDataPoints()
         {
-            var messageBytes = Encoding.UTF8.GetBytes("fetchCurrentTemperatures");
+            var messageBytes = Encoding.UTF8.GetBytes("fetchCurrentDataPoints");
             channel.BasicPublish(
                 exchange: "",
                 routingKey: "rpc_queue",
