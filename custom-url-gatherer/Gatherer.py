@@ -17,7 +17,7 @@ def AggregateDataPoints():
 
 def SendAggregateDataToIngester():
     average_temp = AggregateDataPoints()
-    requests.post(ingester_endpoint + "api/Temperature", json={'Value': average_temp, 'Timestamp': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'), 'SensorId': '64732521-eb10-4a23-8345-0817504ba627', 'Location': 'Vardagsrum'})
+    requests.post(ingester_endpoint + "api/Temperature", json={'Value': average_temp, 'Timestamp': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'), 'SensorId': '64732521-eb10-4a23-8345-0817504ba627', 'Location': 'Living room'})
 
 def AddDataPoint():
     temperature = requests.get(sensor_endpoint).text
