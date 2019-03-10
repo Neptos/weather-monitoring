@@ -27,8 +27,6 @@ connection.on("ReceiveDataPoint", function (dataPointDto) {
         var timestamp = document.createElement("span");
         timestamp.id = dataPointDto.sensorId + "timestamp";
         var datetime = new Date(dataPointDto.timestamp);
-        var tzoffset = (new Date()).getTimezoneOffset();
-        datetime.setMinutes(datetime.getMinutes() - tzoffset);
         timestamp.textContent = datetime.toLocaleString("en-GB");
         dataPointDiv.appendChild(timestamp);
 

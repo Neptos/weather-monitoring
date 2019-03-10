@@ -22,7 +22,7 @@ def AggregateDataPoints():
     averages = {}
 
     for mac in ruuvi_mac_list:
-        if mac in data_points:
+        if mac in data_points and len(data_points[mac]):
             averages[mac] = {}
             averages[mac]["humidity"] = sum(GetRawData(data_points, mac, "humidity"))/len(data_points[mac])
             averages[mac]["temperature"] = sum(GetRawData(data_points, mac, "temperature"))/len(data_points[mac])
@@ -35,9 +35,10 @@ def AggregateDataPoints():
 def SendAggregateDataToIngester():
     averages = AggregateDataPoints()
     for mac in ruuvi_mac_list:
-        requests.post(ingester_endpoint + "api/Temperature", json={'Value': averages[mac]["temperature"], 'Timestamp': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'), 'SensorId': mac, 'Location': ruuvi_name_list[mac]})
-        requests.post(ingester_endpoint + "api/RelativeHumidity", json={'Value': averages[mac]["humidity"], 'Timestamp': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'), 'SensorId': mac, 'Location': ruuvi_name_list[mac]})
-        requests.post(ingester_endpoint + "api/Pressure", json={'Value': averages[mac]["pressure"], 'Timestamp': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'), 'SensorId': mac, 'Location': ruuvi_name_list[mac]})
+        if mac in averages:
+            requests.post(ingester_endpoint + "api/Temperature", json={'Value': averages[mac]["temperature"], 'Timestamp': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'), 'SensorId': mac, 'Location': ruuvi_name_list[mac]})
+            requests.post(ingester_endpoint + "api/RelativeHumidity", json={'Value': averages[mac]["humidity"], 'Timestamp': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'), 'SensorId': mac, 'Location': ruuvi_name_list[mac]})
+            requests.post(ingester_endpoint + "api/Pressure", json={'Value': averages[mac]["pressure"], 'Timestamp': datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ'), 'SensorId': mac, 'Location': ruuvi_name_list[mac]})
 
 def AddDataPoints(data_received):
     global data_points
@@ -56,7 +57,7 @@ for ruuvi_tag in ruuvi_tag_list:
 with gih.GracefulInterruptHandler() as hander:
     while True:
         for x in range(30): # 5minutes
-            data = RuuviTagSensor.get_data_for_sensors(ruuvi_tag_list, 4)
+            data = RuuviTagSensor.get_data_for_sensors(ruuvi_mac_list, 4)
             AddDataPoints(data)
             time.sleep(10)
         SendAggregateDataToIngester()
