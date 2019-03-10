@@ -44,3 +44,11 @@ Serves a basic Razor pages based frontend that connects to the distributor using
 ### Gatherers
 
 They all basically function the same. Gather and aggregate data and then sends it to the Ingester.
+
+#### Ruuvi gatherer
+
+The `RUUVI_TAG_LIST` environment variable needs to follow the following syntax:
+
+`RUUVI_TAG_LIST="<location name>;<mac address>,<location name>;<mac address>"`
+
+`,` separated tags which have `;` separated name and mac address
