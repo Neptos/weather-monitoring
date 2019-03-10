@@ -43,7 +43,8 @@ def AddDataPoints(data_received):
     for mac in ruuvi_mac_list:
         if mac not in data_points:
             data_points[mac] = []
-        data_points[mac].append(data_received[mac])
+        if mac in data_received:
+            data_points[mac].append(data_received[mac])
 
 for ruuvi_tag in ruuvi_tag_list:
     mac = ruuvi_tag.split(";")[1]
