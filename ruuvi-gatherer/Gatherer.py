@@ -22,10 +22,11 @@ def AggregateDataPoints():
     averages = {}
 
     for mac in ruuvi_mac_list:
-        averages[mac] = {}
-        averages[mac]["humidity"] = sum(GetRawData(data_points, mac, "humidity"))/len(data_points[mac])
-        averages[mac]["temperature"] = sum(GetRawData(data_points, mac, "temperature"))/len(data_points[mac])
-        averages[mac]["pressure"] = sum(GetRawData(data_points, mac, "pressure"))/len(data_points[mac])
+        if mac in data_points:
+            averages[mac] = {}
+            averages[mac]["humidity"] = sum(GetRawData(data_points, mac, "humidity"))/len(data_points[mac])
+            averages[mac]["temperature"] = sum(GetRawData(data_points, mac, "temperature"))/len(data_points[mac])
+            averages[mac]["pressure"] = sum(GetRawData(data_points, mac, "pressure"))/len(data_points[mac])
 
     data_points = {}
 
