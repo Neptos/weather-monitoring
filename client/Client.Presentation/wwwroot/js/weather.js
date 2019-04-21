@@ -12,6 +12,9 @@ var connection = new signalR.HubConnectionBuilder()
     .build();
 
 connection.on("ReceiveDataPoint", function (dataPointDto) {
+    if (dataPointDto === null || dataPointDto === undefined) {
+        return;
+    }
     var dataPointDiv = document.getElementById(dataPointDto.sensorId);
     if (dataPointDiv === null || dataPointDiv === undefined) {
         var dataPointsHolder = document.getElementById("container");
