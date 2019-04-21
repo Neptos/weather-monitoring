@@ -57,5 +57,8 @@ def AddDataPoint():
 
 with gih.GracefulInterruptHandler() as hander:
     while True:
-        AddDataPoint()
+        try:
+            AddDataPoint()
+        except:
+            pass
         time.sleep(120)
